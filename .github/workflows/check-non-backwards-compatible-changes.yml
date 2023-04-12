@@ -1,0 +1,47 @@
+name: 'Check Non Backwards Compatible Changes'
+
+on:
+  pull_request_target:
+    paths:
+      - 'src/main/java/com/blogspot/nombre_temp/retrofit/example/model/**.java'
+
+jobs:
+  check-non-backwards-compatible-changes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            const filesInPullRequestResponse = await github.rest.pulls.listFiles({
+              pull_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+
+            const modifiedFilenames = filesInPullRequestResponse.data
+              .filter(file => file.status === 'modified' || file.status === 'changed')
+              .map(file => `- ${file.filename}`);
+
+            if (modifiedFilenames.length > 0) {
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: `## Warning on Changes of Existing Policy Constraints, Conditions, Facts and Triggers
+            The following existing files related to existing Policy Constraint seem to be modified by this pull-request:
+
+            ${modifiedFilenames.join('\n')}
+
+            Any change to class structure or to their JSON serialization of existing Policy Constraints, Conditions, Facts and Triggers may break policy violation comparison.
+
+            Unless being completely sure about what is being done, please avoid making that kind of modifications as existing policy violations or waivers in an IQ instance prior this changes are likely to be affected or no longer applying on new policy evaluations.`
+              });
+            }
+
+            github.rest.issues.addLabels({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              labels: ['non-backwards-compatible-changes']
+            });

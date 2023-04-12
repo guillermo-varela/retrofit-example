@@ -1,0 +1,17 @@
+name: 'Block Merge if Non Backwards Compatible Changes'
+
+on:
+  pull_request:
+    types: [synchronize, opened, reopened, labeled, unlabeled]
+
+jobs:
+  do-not-merge:
+    if: ${{ contains(github.event.*.labels.*.name, 'non-backwards-compatible-changes') }}
+    name: Prevent Merging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for label
+        run: |
+          echo "Pull request is labeled as 'non-backwards-compatible-changes'"
+          echo "Address the comments regarding the possible non backwards compatible changes and delete the label when done."
+          exit 1
