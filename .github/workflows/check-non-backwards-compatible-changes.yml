@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/github-script@v6
         with:
+          github-token: ${{ secrets.ACTION_KEY }}
           script: |
             const filesInPullRequestResponse = await github.rest.pulls.listFiles({
               pull_number: context.issue.number,

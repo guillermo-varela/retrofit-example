@@ -18,6 +18,5 @@ jobs:
       - name: If label does not exist
         if: ${{ !contains(github.event.*.labels.*.name, 'non-backwards-compatible-changes') }}
         run: |
-          echo ${{ toJSON(github.event.*.labels.*.name) }}
           echo "Pull request is NOT labeled as 'non-backwards-compatible-changes'"
           exit 0
