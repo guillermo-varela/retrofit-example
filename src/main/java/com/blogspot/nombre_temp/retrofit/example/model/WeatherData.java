@@ -9,6 +9,7 @@ public class WeatherData {
 
   private Main main;
   private Wind wind;
+  private String testField = "test";
 
   public Main getMain() {
     return main;
