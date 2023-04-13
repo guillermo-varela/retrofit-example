@@ -2,7 +2,7 @@ name: 'Block Merge if Non Backwards Compatible Changes'
 
 on:
   workflow_run:
-    workflows: ['Check Non Backwards Compatible Changes / check-non-backwards-compatible-changes']
+    workflows: ['Check Non Backwards Compatible Changes / check-non-backwards-compatible-changes (pull_request_target)']
     types:
       - completed
 
