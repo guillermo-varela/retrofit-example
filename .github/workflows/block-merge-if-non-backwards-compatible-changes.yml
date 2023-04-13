@@ -1,7 +1,7 @@
 name: 'Block Merge if Non Backwards Compatible Changes'
 
 on:
-  issues:
+  pull_request_target:
     types: [labeled, unlabeled]
 
 jobs:
