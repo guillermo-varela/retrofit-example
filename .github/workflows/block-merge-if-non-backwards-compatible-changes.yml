@@ -1,8 +1,10 @@
 name: 'Block Merge if Non Backwards Compatible Changes'
 
 on:
-  pull_request_target:
-    types: [synchronize, opened, reopened, labeled, unlabeled]
+  workflow_run:
+    workflows: ['Check Non Backwards Compatible Changes']
+    types:
+      - completed
 
 jobs:
   do-not-merge:
